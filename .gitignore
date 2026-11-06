@@ -1,0 +1,17 @@
+node_modules/
+.env
+.env.*
+**/.env
+**/.env.*
+!.env.example
+!**/.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+dist/
+coverage/
+logs/
+*.log
+.DS_Store
+npm-debug.log*

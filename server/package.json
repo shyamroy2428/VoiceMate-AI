@@ -1,0 +1,8 @@
+{
+  "name": "voicemate-ai-server",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": { "start": "node server.js", "dev": "node --watch server.js", "test": "node --test", "check": "node --check server.js && node --check routes/chat.js && node --check routes/speech.js && node --check routes/tts.js && node --check controllers/chatController.js && node --check controllers/speechController.js && node --check services/gnaniService.js && node --check middleware/errorHandler.js" },
+  "dependencies": { "cors": "^2.8.5", "dotenv": "^16.4.7", "express": "^4.21.2", "multer": "^2.0.2" }
+}
