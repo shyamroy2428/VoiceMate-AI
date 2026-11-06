@@ -17,7 +17,7 @@ test('Prisma receives the uploaded WAV and configured model/language using backe
   let captured;
   globalThis.fetch = async (url, options) => {
     captured = { url, options };
-    return new Response(JSON.stringify({ success: true, transcript: 'Recognized words' }), {
+    return new Response(JSON.stringify({ success: true, transcript: 'Recognized words', detected_language_code: 'en-IN' }), {
       status: 200,
       headers: { 'content-type': 'application/json' }
     });
@@ -29,11 +29,12 @@ test('Prisma receives the uploaded WAV and configured model/language using backe
     originalname: 'recording.wav'
   });
 
-  assert.equal(transcript, 'Recognized words');
+  assert.deepEqual(transcript, { text: 'Recognized words', detectedLanguageCode: 'en-IN' });
   assert.equal(captured.url, 'https://gnani.test/stt/v3');
   assert.equal(captured.options.headers['X-API-Key-ID'], 'unit-test-key');
   assert.equal(captured.options.body.get('model'), 'prisma-v3.0');
   assert.equal(captured.options.body.get('language_code'), 'indic-auto');
+  assert.equal(captured.options.body.get('format'), 'codemix');
   const audio = captured.options.body.get('audio_file');
   assert.equal(audio.name, 'recording.wav');
   assert.equal(audio.type, 'audio/wav');

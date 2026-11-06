@@ -43,6 +43,9 @@ export async function transcribeAudio(file) {
   form.append('audio_file', new Blob([file.buffer], { type: file.mimetype || 'audio/wav' }), file.originalname || 'recording.wav');
   form.append('model', process.env.GNANI_PRISMA_MODEL || 'prisma-v3.0');
   form.append('language_code', process.env.GNANI_STT_LANGUAGE || 'indic-auto');
+  // Prisma v3 documents codemix for preserving Indic script while retaining
+  // English words in Latin script in mixed-language utterances.
+  form.append('format', 'codemix');
 
   const response = await fetch(`${BASE_URL}/stt/v3`, {
     method: 'POST',
@@ -53,7 +56,10 @@ export async function transcribeAudio(file) {
   if (!response.ok) await upstreamError(response, 'Prisma speech-to-text');
   const data = await response.json();
   if (typeof data.transcript !== 'string') throw Object.assign(new Error('Prisma returned an unexpected transcription response.'), { status: 502 });
-  return data.transcript;
+  return {
+    text: data.transcript,
+    detectedLanguageCode: typeof data.detected_language_code === 'string' ? data.detected_language_code : null
+  };
 }
 
 export async function synthesizeSpeech(text, _voice) {

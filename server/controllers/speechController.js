@@ -3,8 +3,8 @@ import { synthesizeSpeech, transcribeAudio } from '../services/gnaniService.js';
 export async function postTranscription(req, res, next) {
   try {
     if (!req.file?.buffer?.length) return res.status(400).json({ error: 'Attach an audio file in the audio field.' });
-    const text = await transcribeAudio(req.file);
-    return res.json({ text });
+    const result = await transcribeAudio(req.file);
+    return res.json(result);
   } catch (error) { return next(error); }
 }
 
